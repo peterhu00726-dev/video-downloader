@@ -19,12 +19,17 @@ def get_info():
     if not url:
         return jsonify({'error': '請提供網址'}), 400
 
-    # 設定安全偽裝標頭，防止雲端伺服器連線被拒絕
+    # 設定安全偽裝標頭，並模擬為手機版 Android 與 iOS 用戶端發送要求
     ydl_opts = {
         'quiet': True,
         'skip_download': True,
         'nocheckcertificate': True,
         'no_warnings': True,
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['android', 'ios']
+            }
+        },
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -50,7 +55,7 @@ def get_info():
             })
     except Exception as e:
         print(f"解析失敗: {str(e)}")
-        return jsonify({'error': '影片解析失敗。請確認影片網址是否正確。'}), 500
+        return jsonify({'error': '影片解析失敗。這通常是因為雲端伺服器受到限制，請更換其他影片網址測試。'}), 500
 
 # API：真實影片下載路由
 @app.route('/api/download', methods=['GET'])
@@ -75,6 +80,11 @@ def download():
         'merge_output_format': 'mp4',
         'quiet': True,
         'nocheckcertificate': True,
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['android', 'ios']
+            }
+        },
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         }
