@@ -4,91 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>高速雲端影音下載站</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css)" rel="stylesheet">
+    <style>
+        .smooth-transition { 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        /* 絲滑按鈕與卡片交互動畫 */
+        .btn-interactive { 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .btn-interactive:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 20px -10px rgba(220, 38, 38, 0.3); 
+        }
+        .btn-interactive:active { 
+            transform: translateY(1px) scale(0.98); 
+        }
+        
+        /* 滑動登場動畫 */
+        @keyframes fadeInUp { 
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            } 
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            } 
+        }
+        .animate-fade-in-up { 
+            animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800 min-h-screen flex flex-col">
-    <nav class="bg-white border-b border-gray-200 shadow-sm">
-        <div class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+<body class="bg-gradient-to-br from-slate-50 via-gray-50 to-red-50/10 font-sans text-gray-800 min-h-screen flex flex-col">
+    
+    <!-- 導覽列 -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="bg-red-600 w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md">
                     <i class="fas fa-play"></i>
                 </div>
-                <span class="text-xl font-black text-gray-900">高速影音<span class="text-red-600">下載站</span></span>
+                <span class="text-xl font-black text-gray-900 tracking-tight">高速影音<span class="text-red-600">下載站</span></span>
             </div>
-            <div class="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-100 flex items-center gap-2">
-                <i class="fas fa-bolt"></i> 雲端極速核心運作中
+            <div class="text-xs font-bold text-amber-600 bg-amber-50 px-3.5 py-2 rounded-full border border-amber-100/60 flex items-center gap-2">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+                雲端極速核心運作中
             </div>
         </div>
     </nav>
-    <main class="flex-1 max-w-2xl w-full mx-auto px-4 py-12">
-        <div class="text-center space-y-3 mb-8">
-            <h1 class="text-3xl font-black text-gray-900">取得最完美的 <span class="text-red-600">原始高畫質</span></h1>
-            <p class="text-gray-500 text-sm">貼上網址，我們的雲端伺服器將為您擷取最高畫質與無損音軌。</p>
+
+    <!-- 主內容區 -->
+    <main class="flex-1 max-w-2xl w-full mx-auto px-4 py-16 flex flex-col justify-center animate-fade-in-up">
+        <div class="text-center space-y-4 mb-10">
+            <h1 class="text-4xl font-black text-gray-900 tracking-tight">
+                取得最完美的 <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-500">原始高畫質</span>
+            </h1>
+            <p class="text-gray-500 text-sm">貼上網址，我們的雲端伺服器將為您完美擷取最高解析度與無損音軌。</p>
         </div>
-        <div class="bg-white border-2 border-gray-100 rounded-2xl p-2 shadow-xl flex gap-2">
-            <input type="text" id="urlInput" placeholder="請貼上影片網址..." class="flex-1 bg-transparent border-none outline-none px-4 font-medium text-gray-800">
-            <button onclick="fetchInfo()" id="fetchBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md">
-                開始解析
+
+        <!-- 搜尋列 -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-2 shadow-xl flex gap-2 focus-within:border-red-500 focus-within:ring-4 focus-within:ring-red-50/60 smooth-transition">
+            <input type="text" id="urlInput" placeholder="請貼上影片網址..." class="flex-1 bg-transparent border-none outline-none px-4 font-semibold text-gray-800">
+            <button onclick="fetchInfo()" id="fetchBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all shadow-md btn-interactive">
+                <span id="fetchBtnText">開始解析</span>
             </button>
         </div>
-        <p id="errorMsg" class="text-red-500 text-sm font-bold mt-3 text-center hidden"></p>
-        <div id="resultCard" class="hidden mt-8 bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-2xl">
-            <div class="p-6 border-b border-gray-50 flex gap-6 bg-gray-50/50">
-                <img id="thumb" src="" class="w-40 rounded-lg shadow-sm object-cover aspect-video">
-                <div class="flex flex-col justify-center">
+        
+        <p id="errorMsg" class="text-red-500 text-sm font-bold mt-4 text-center hidden animate-fade-in-up bg-red-50 py-2.5 px-4 rounded-xl border border-red-100"></p>
+
+        <!-- 結果卡片 -->
+        <div id="resultCard" class="hidden mt-8 bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-2xl animate-fade-in-up">
+            <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row gap-6 bg-gray-50/50">
+                <img id="thumb" src="" class="w-full sm:w-44 rounded-2xl shadow-sm object-cover aspect-video border border-gray-150">
+                <div class="flex flex-col justify-center space-y-2">
+                    <span class="text-xs font-extrabold text-red-600 tracking-wider bg-red-50 px-2.5 py-1 rounded-full border border-red-100 w-fit">已成功解析</span>
                     <h2 id="title" class="font-black text-lg text-gray-900 line-clamp-2"></h2>
-                    <p id="author" class="text-gray-500 text-sm mt-1"></p>
+                    <p id="author" class="text-gray-500 text-xs font-semibold"></p>
                 </div>
             </div>
-            <div class="p-6 space-y-4">
-                <div class="bg-red-50 border border-red-100 p-4 rounded-xl flex justify-between items-center">
-                    <div>
-                        <p class="font-black text-red-700">⭐ 最高原畫質 (Max Quality)</p>
-                        <p class="text-xs text-gray-500 mt-1">系統將自動匹配該影片提供的最高解析度 (支援 4K)</p>
-                    </div>
-                    <i class="fas fa-check-circle text-red-600 text-xl"></i>
+            
+            <div class="p-6 space-y-6">
+                <!-- 畫質選擇下拉選單 -->
+                <div class="space-y-2">
+                    <label class="text-xs font-extrabold text-gray-400 uppercase">選擇您要的影片品質：</label>
+                    <select id="qualitySelect" class="w-full p-3.5 border border-gray-200 rounded-xl bg-white outline-none text-sm font-black text-gray-700 focus:border-red-500 focus:ring-2 focus:ring-red-50 cursor-pointer shadow-sm">
+                    </select>
                 </div>
-                <button onclick="downloadVideo()" id="downloadBtn" class="w-full bg-gray-900 hover:bg-black text-white font-black py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                    <i class="fas fa-download"></i> <span id="downloadText">立即真實下載檔案</span>
+
+                <div class="bg-red-50 border border-red-100 p-4 rounded-2xl flex justify-between items-center">
+                    <div>
+                        <p class="font-bold text-red-700 text-sm">✨ 自動影音無損合併</p>
+                        <p class="text-xs text-red-600/80">系統會自動透過雲端，將最優畫質與立體音軌結合成完美 MP4。</p>
+                    </div>
+                    <i class="fas fa-wand-magic-sparkles text-red-500 text-xl"></i>
+                </div>
+
+                <!-- 下載按鈕 -->
+                <button onclick="downloadVideo()" id="downloadBtn" class="w-full bg-gray-900 hover:bg-black text-white font-extrabold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2.5 btn-interactive">
+                    <i class="fas fa-cloud-arrow-down"></i> <span id="downloadText">立即真實下載 MP4</span>
                 </button>
             </div>
         </div>
     </main>
-    <footer class="bg-white border-t border-gray-100 py-10 mt-auto">
-        <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            <div class="space-y-2">
-                <i class="fas fa-crown text-amber-500 text-2xl"></i>
-                <h4 class="font-bold text-gray-900 text-sm">真・最高畫質</h4>
-                <p class="text-xs text-gray-500">雲端自動將無損影像與音軌合併。</p>
-            </div>
-            <div class="space-y-2">
-                <i class="fas fa-shield-alt text-emerald-500 text-2xl"></i>
-                <h4 class="font-bold text-gray-900 text-sm">安全免安裝</h4>
-                <p class="text-xs text-gray-500">所有轉檔在雲端完成，不傷您的設備。</p>
-            </div>
-            <div class="space-y-2">
-                <i class="fas fa-bolt text-blue-500 text-2xl"></i>
-                <h4 class="font-bold text-gray-900 text-sm">完全免費</h4>
-                <p class="text-xs text-gray-500">乾淨無廣告，帶給您最純粹的體驗。</p>
-            </div>
-        </div>
+
+    <footer class="bg-white border-t border-gray-100 py-8 text-center text-xs text-gray-400 mt-auto">
+        <p>© 2026 高速影音下載站. All rights reserved.</p>
     </footer>
+
     <script>
         let currentUrl = '';
+
         async function fetchInfo() {
             const url = document.getElementById('urlInput').value;
             const errorMsg = document.getElementById('errorMsg');
             const btn = document.getElementById('fetchBtn');
+            const btnText = document.getElementById('fetchBtnText');
+            
             if(!url) {
-                errorMsg.innerText = '請輸入網址！';
+                errorMsg.innerText = '請輸入影片網址！';
                 errorMsg.classList.remove('hidden');
                 return;
             }
+            
             errorMsg.classList.add('hidden');
             document.getElementById('resultCard').classList.add('hidden');
-            btn.innerText = '處理中...';
+            
+            btnText.innerText = '解析中...';
             btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+
             try {
                 const res = await fetch('/api/info', {
                     method: 'POST',
@@ -96,29 +147,49 @@
                     body: JSON.stringify({ url })
                 });
                 const data = await res.json();
+                
                 if(!res.ok) throw new Error(data.error || '解析失敗');
+
                 currentUrl = url;
                 document.getElementById('thumb').src = data.thumbnail;
                 document.getElementById('title').innerText = data.title;
                 document.getElementById('author').innerText = data.author;
+                
+                // 動態渲染畫質選單
+                const select = document.getElementById('qualitySelect');
+                select.innerHTML = '';
+                data.formats.forEach(f => {
+                    const opt = document.createElement('option');
+                    opt.value = f.id;
+                    opt.innerText = f.label;
+                    select.appendChild(opt);
+                });
+
                 document.getElementById('resultCard').classList.remove('hidden');
             } catch (err) {
                 errorMsg.innerText = err.message;
                 errorMsg.classList.remove('hidden');
             } finally {
-                btn.innerText = '開始解析';
+                btnText.innerText = '開始解析';
                 btn.disabled = false;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
             }
         }
+
         function downloadVideo() {
             const btn = document.getElementById('downloadBtn');
             const txt = document.getElementById('downloadText');
-            txt.innerText = '雲端伺服器正在下載與合併檔案，請稍候...';
+            const quality = document.getElementById('qualitySelect').value;
+            
+            txt.innerText = '雲端正在下載與合併，請稍候...';
             btn.classList.replace('bg-gray-900', 'bg-gray-400');
             btn.disabled = true;
-            window.location.href = `/api/download?url=${encodeURIComponent(currentUrl)}`;
+
+            // 觸發真實下載
+            window.location.href = `/api/download?url=${encodeURIComponent(currentUrl)}&quality=${quality}`;
+
             setTimeout(() => {
-                txt.innerText = '立即真實下載檔案';
+                txt.innerText = '立即下載 MP4';
                 btn.classList.replace('bg-gray-400', 'bg-gray-900');
                 btn.disabled = false;
             }, 5000);
